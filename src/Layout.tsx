@@ -20,13 +20,13 @@ export default function Layout() {
         </ul>
         <ul>
           <li>
-            <a href='/loadtime' role='button'>
-              Load Timer
+            <a href='/kubejs' role='button'>
+              KubeJS
             </a>
           </li>
           <li>
-            <a href='#' role='button'>
-              Button
+            <a href='/loadtime' role='button'>
+              Load-Time
             </a>
           </li>
           <li>

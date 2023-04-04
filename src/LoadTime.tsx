@@ -31,6 +31,12 @@ export default function LoadTimePage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadTimes, setLoadTimes] = useState<HighLoadTime[]>();
 
+  const msFormatted = (millis: number) => {
+    let minutes = Math.floor(millis / 60000);
+    let seconds = Number(((millis % 60000) / 1000).toFixed(0));
+    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  };
+
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
@@ -93,21 +99,31 @@ export default function LoadTimePage() {
 
   return (
     <>
-      <article>
-        <header>Modpack Load Time Debugger</header>
-        <input type='file' onChange={onUpload} />
-        <footer>
-          <ol>
-            <li>Start your modpack</li>
-            <li>Wait until title screen is shown</li>
-            <li>Keep minecraft window open</li>
-            <li>
-              Upload your <b>/logs/latest.log</b> file
-            </li>
-          </ol>
-        </footer>
-      </article>
-      {isLoading && !loadTimes ? <article aria-busy='true'></article> : null}
+      {!loadTimes && !isLoading && (
+        <article>
+          <header>Modpack Load Time Debugger</header>
+          <input type='file' onChange={onUpload} />
+          <footer>
+            <ol>
+              <li>Start your modpack</li>
+              <li>Wait until title screen is shown</li>
+              <li>Keep minecraft window open</li>
+              <li>
+                Upload your <b>/logs/latest.log</b> file
+              </li>
+            </ol>
+          </footer>
+        </article>
+      )}
+      {isLoading && !loadTimes && <article aria-busy='true'></article>}
+      {loadTimes && (
+        <article>
+          Total:{' '}
+          <kbd style={{ color: 'white', backgroundColor: '#3949ab' }}>
+            {msFormatted(loadTimes.reduce((acc, entry) => acc + entry.time, 0))}
+          </kbd>
+        </article>
+      )}
       {loadTimes?.map((entry) => (
         <article>
           <header>
