@@ -9,7 +9,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={<LoadTime />} />
+          <Route path='/loadtime' element={<LoadTime />} />
         </Route>
       </Routes>
     </BrowserRouter>

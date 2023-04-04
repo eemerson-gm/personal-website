@@ -93,22 +93,20 @@ export default function LoadTimePage() {
 
   return (
     <>
-      <div className='grid'>
-        <article>
-          <header>Modpack Load Times</header>
-          <input type='file' onChange={onUpload} />
-          <footer>
-            <ol>
-              <li>Start your modpack</li>
-              <li>Wait until title screen is shown</li>
-              <li>Keep minecraft window open</li>
-              <li>
-                Upload your <b>/logs/latest.log</b> file
-              </li>
-            </ol>
-          </footer>
-        </article>
-      </div>
+      <article>
+        <header>Modpack Load Time Debugger</header>
+        <input type='file' onChange={onUpload} />
+        <footer>
+          <ol>
+            <li>Start your modpack</li>
+            <li>Wait until title screen is shown</li>
+            <li>Keep minecraft window open</li>
+            <li>
+              Upload your <b>/logs/latest.log</b> file
+            </li>
+          </ol>
+        </footer>
+      </article>
       {isLoading && !loadTimes ? <article aria-busy='true'></article> : null}
       {loadTimes?.map((entry) => (
         <article>
