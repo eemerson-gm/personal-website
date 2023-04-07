@@ -29,12 +29,15 @@ interface HighLoadTime {
 
 export default function LoadTimePage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [totalLoadTime, setTotalLoadTime] = useState<string>('');
   const [loadTimes, setLoadTimes] = useState<HighLoadTime[]>();
 
   const msFormatted = (millis: number) => {
     let minutes = Math.floor(millis / 60000);
     let seconds = Number(((millis % 60000) / 1000).toFixed(0));
-    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    return (
+      minutes + ' Minutes ' + (seconds < 10 ? '0' : '') + seconds + ' Seconds'
+    );
   };
 
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +86,11 @@ export default function LoadTimePage() {
           if (a.time < b.time) return 1;
           return 0;
         });
+        setTotalLoadTime(
+          msFormatted(
+            tempHighLoadTimes.reduce((acc, entry) => acc + entry.time, 0)
+          )
+        );
         setLoadTimes(
           tempHighLoadTimes.filter((entry) => {
             return !(
@@ -120,7 +128,7 @@ export default function LoadTimePage() {
         <article>
           Total:{' '}
           <kbd style={{ color: 'white', backgroundColor: '#3949ab' }}>
-            {msFormatted(loadTimes.reduce((acc, entry) => acc + entry.time, 0))}
+            {totalLoadTime}
           </kbd>
         </article>
       )}

@@ -15,7 +15,7 @@ export default function Layout() {
       >
         <ul>
           <li>
-            <strong>Modded Minecraft Helper</strong>
+            <strong>Modded Minecraft Utils</strong>
           </li>
         </ul>
         <ul>
@@ -26,7 +26,7 @@ export default function Layout() {
           </li>
           <li>
             <a href='/loadtime' role='button'>
-              Load-Time
+              Load Time
             </a>
           </li>
           <li>
