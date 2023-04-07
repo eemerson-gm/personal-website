@@ -1,4 +1,4 @@
-import { forEachOf } from 'async';
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { MouseEvent, useEffect, useState } from 'react';
 
 interface ItemEntry {
@@ -16,10 +16,40 @@ interface DataEntry {
   height: number;
 }
 
+interface Progress {
+  current: number;
+  maximum: number;
+}
+
+const asyncEach = <T,>(
+  array: T[],
+  onEntry: (entry: T, index: number) => void,
+  onProgress: (index: number) => void,
+  onFinish: () => void,
+  chunk = 10,
+  index = 0
+) => {
+  if (array.length <= 0) return;
+  if (index >= array.length) {
+    onFinish();
+    return;
+  }
+  onEntry(array[index], index);
+  if (index % chunk === 0) {
+    setTimeout(function () {
+      onProgress(index);
+      asyncEach(array, onEntry, onProgress, onFinish, chunk, ++index);
+    }, 0);
+  } else {
+    asyncEach(array, onEntry, onProgress, onFinish, chunk, ++index);
+  }
+};
+
 export default function KubeJSPage() {
+  const [progress, setProgress] = useState<Progress>();
+
   const [imageFile, setImageFile] = useState<File>();
   const [atlasFile, setAtlasFile] = useState<File>();
-
   const [blocks, setBlocks] = useState<string>();
   const [atlas, setAtlas] = useState<DataEntry[]>();
 
@@ -76,28 +106,63 @@ export default function KubeJSPage() {
       const image = new Image();
       const canvas = document.createElement('canvas');
       const context = canvas?.getContext('2d');
+      const extract = require('extract-string');
+      const uniques = [] as string[];
       image.onload = () => {
-        forEachOf(filteredAtlas.entries(), ([index, entry]) => {
-          canvas.width = entry.width;
-          canvas.height = entry.height;
-          const img = cropImage(
-            image,
-            canvas,
-            context,
-            entry.x,
-            entry.y,
-            entry.width,
-            entry.height
-          );
-          tempItemList?.push({
-            id: entry.name,
-            type: 'item',
-            dataURL: img,
-          });
-          context?.clearRect(0, 0, entry.width, entry.height);
-        });
-        setItemList(tempItemList);
-        console.log('Complete!');
+        asyncEach(
+          filteredAtlas,
+          (entry, index) => {
+            canvas.width = entry.width;
+            canvas.height = entry.height;
+            const img = cropImage(
+              image,
+              canvas,
+              context,
+              entry.x,
+              entry.y,
+              entry.width,
+              entry.height
+            );
+            const itemType =
+              entry.name.indexOf('block') > -1 ? 'block' : 'item';
+            const item = extract(entry.name).pattern(`{mod}:${itemType}/{id}`);
+            if (!item[0]) return;
+            const itemId = item[0].mod + ':' + item[0].id;
+            const hasNumber = /\d/.test(itemId);
+            if (uniques.includes(itemId)) return;
+            if (
+              hasNumber &&
+              (itemId.endsWith('_0') || itemId.endsWith('_00'))
+            ) {
+              const newItemId = itemId.substring(0, itemId.length - 2);
+              if (uniques.includes(newItemId)) return;
+              tempItemList?.push({
+                id: newItemId,
+                type: 'item',
+                dataURL: img,
+              });
+              uniques.push(newItemId);
+            }
+            if (!hasNumber) {
+              tempItemList?.push({
+                id: itemId,
+                type: 'item',
+                dataURL: img,
+              });
+              uniques.push(itemId);
+            }
+            context?.clearRect(0, 0, entry.width, entry.height);
+          },
+          (index) => {
+            setProgress({
+              current: index,
+              maximum: filteredAtlas.length,
+            });
+          },
+          () => {
+            setItemList(tempItemList);
+          }
+        );
       };
       image.src = blocks;
     }
@@ -151,21 +216,42 @@ export default function KubeJSPage() {
           </ol>
         </footer>
       </article>
-      {itemList?.map((item) => (
-        <img
-          key={item.id}
-          alt={item.id}
-          src={item.dataURL}
-          width='48px'
-          height='48px'
-          style={{
-            margin: '4px',
-            padding: '2px',
-            backgroundColor: 'var(--card-sectionning-background-color)',
-            imageRendering: 'pixelated',
-          }}
-        />
-      ))}
+      <div
+        style={{
+          textAlign: 'center',
+          display: progress && !itemList ? 'block' : 'none',
+        }}
+      >
+        <a aria-busy='true'>
+          Loading assets, please wait… {progress?.current}/{progress?.maximum}
+        </a>
+      </div>
+      <div
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+      >
+        {itemList?.map((item) => (
+          <button
+            data-tooltip={item.id}
+            style={{
+              margin: '4px',
+              padding: '0px',
+              width: '48px',
+              float: 'left',
+            }}
+          >
+            <img
+              key={item.id}
+              alt={item.id}
+              src={item.dataURL}
+              width='48px'
+              height='48px'
+              style={{
+                imageRendering: 'pixelated',
+              }}
+            />
+          </button>
+        ))}
+      </div>
     </>
   );
 }
