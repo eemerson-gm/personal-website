@@ -171,7 +171,12 @@ export default function KubeJSPage() {
   return (
     <>
       <article>
-        <header>KubeJS Editor</header>
+        <header>
+          <hgroup style={{ margin: 0 }}>
+            <h2>KubeJS Editor</h2>
+            <h3>Create custom recipes using items from your modpack.</h3>
+          </hgroup>
+        </header>
         <label htmlFor='image'>Upload Image:</label>
         <input
           id='image'
@@ -196,22 +201,22 @@ export default function KubeJSPage() {
               <a href='https://www.curseforge.com/minecraft/mc-mods/texture-dump/files/all'>
                 Texture Dump
               </a>{' '}
-              mod from CurseForge
+              mod from CurseForge.
             </li>
-            <li>Launch your minecraft modpack with the mod installed</li>
+            <li>Launch your minecraft modpack with the mod installed.</li>
             <li>
               Upload the image:{' '}
               <b>
                 /texture_dump/textures/minecraft_textures_atlas_blocks.png_mipmap_0.png
               </b>{' '}
-              file
+              file.
             </li>
             <li>
               Upload the atlas:{' '}
               <b>
                 /texture_dump/textureInfo/minecraft_textures_atlas_blocks.png_mipmap_0.js
               </b>{' '}
-              file
+              file.
             </li>
           </ol>
         </footer>

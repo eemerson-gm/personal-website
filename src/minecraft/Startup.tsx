@@ -27,7 +27,7 @@ interface HighLoadTime {
   messages: string[];
 }
 
-export default function LoadTimePage() {
+export default function StartupPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [totalLoadTime, setTotalLoadTime] = useState<string>('');
   const [loadTimes, setLoadTimes] = useState<HighLoadTime[]>();
@@ -109,15 +109,21 @@ export default function LoadTimePage() {
     <>
       {!loadTimes && !isLoading && (
         <article>
-          <header>Modpack Load Time Debugger</header>
-          <input type='file' onChange={onUpload} />
+          <header>
+            <hgroup style={{ margin: 0 }}>
+              <h2>Startup Debugger</h2>
+              <h3>Check which mod is taking up all your load time.</h3>
+            </hgroup>
+          </header>
+          <label htmlFor='log'>Upload Log:</label>
+          <input id='log' type='file' accept='.log' onChange={onUpload} />
           <footer>
             <ol>
-              <li>Start your modpack</li>
-              <li>Wait until title screen is shown</li>
-              <li>Keep minecraft window open</li>
+              <li>Start your modpack.</li>
+              <li>Wait until title screen is shown.</li>
+              <li>Keep minecraft window open.</li>
               <li>
-                Upload your <b>/logs/latest.log</b> file
+                Upload your <b>/logs/latest.log</b> file.
               </li>
             </ol>
           </footer>

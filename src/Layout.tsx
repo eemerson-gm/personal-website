@@ -15,24 +15,36 @@ export default function Layout() {
       >
         <ul>
           <li>
-            <strong>Modded Minecraft Utils</strong>
+            <strong>Solodite</strong>
           </li>
         </ul>
         <ul>
           <li>
-            <a href='/kubejs' role='button'>
-              KubeJS
-            </a>
+            <details role='list' dir='rtl'>
+              <summary aria-haspopup='listbox' role='link'>
+                Minecraft
+              </summary>
+              <ul role='listbox'>
+                <li>
+                  <a href='/minecraft/kubejs'>KubeJS</a>
+                </li>
+                <li>
+                  <a href='/minecraft/startup'>Startup</a>
+                </li>
+              </ul>
+            </details>
           </li>
           <li>
-            <a href='/loadtime' role='button'>
-              Load Time
-            </a>
-          </li>
-          <li>
-            <a href='#' role='button'>
-              Button
-            </a>
+            <details role='list' dir='rtl'>
+              <summary aria-haspopup='listbox' role='link'>
+                Japanese
+              </summary>
+              <ul role='listbox'>
+                <li>
+                  <a href='/japanese/practice'>Practice</a>
+                </li>
+              </ul>
+            </details>
           </li>
         </ul>
       </nav>

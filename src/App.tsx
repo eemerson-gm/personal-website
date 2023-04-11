@@ -1,17 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '@picocss/pico';
-import LoadTime from './LoadTime';
 import Layout from './Layout';
-import KubeJS from './KubeJS';
+import StartupPage from './minecraft/Startup';
+import KubeJSPage from './minecraft/KubeJS';
+import PracticePage from './japanese/Practice';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route path='/loadtime' element={<LoadTime />} />
-          <Route path='/kubejs' element={<KubeJS />} />
+          <Route path='/minecraft/startup' element={<StartupPage />} />
+          <Route path='/minecraft/kubejs' element={<KubeJSPage />} />
+          <Route path='/japanese/practice' element={<PracticePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
