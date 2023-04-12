@@ -660,11 +660,31 @@ export default function PracticePage() {
         <footer>
           <button
             style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+            onClick={() => {
+              setIsFinished(false);
+              setLetters(shuffleArray(letters));
+              setSuccessful([]);
+              setIndex(0);
+              resetAll();
+            }}
           >
             Retry Set
           </button>
           <button
             style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+            onClick={() => {
+              setIsFinished(false);
+              setLetters(
+                shuffleArray(
+                  letters.filter((entry) => {
+                    return !successful.includes(entry.roumaji);
+                  })
+                )
+              );
+              setSuccessful([]);
+              setIndex(0);
+              resetAll();
+            }}
           >
             Retry Failed
           </button>
@@ -672,6 +692,7 @@ export default function PracticePage() {
             onClick={() => {
               setIsFinished(false);
               setIsPracticing(false);
+              setSuccessful([]);
               resetAll();
             }}
             style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
