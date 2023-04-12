@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useCallback, KeyboardEvent, useState } from 'react';
 
 type CharType = 'gojuuon' | 'dakuon' | 'handakuon' | 'sokuon' | 'youon';
@@ -539,7 +540,9 @@ export default function PracticePage() {
   const [isPracticing, setIsPracticing] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>();
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
+  const [isFinished, setIsFinished] = useState<boolean>(false);
   const [letters, setLetters] = useState<HiriganaType[]>([]);
+  const [successful, setSuccessful] = useState<string[]>([]);
 
   const [answer, setAnswer] = useState<string>();
   const [index, setIndex] = useState<number>(0);
@@ -552,6 +555,12 @@ export default function PracticePage() {
     return array;
   };
 
+  const resetAll = () => {
+    setAnswer('');
+    setIsCorrect(undefined);
+    setIsAnswered(false);
+  };
+
   const startPractice = useCallback((types: CharType[]) => {
     const tempAlphabet = hirigana.filter((entry) => {
       return types.includes(entry.type);
@@ -561,17 +570,24 @@ export default function PracticePage() {
   }, []);
 
   const onNextQuestion = useCallback(() => {
-    setIndex(index + 1);
-    setAnswer('');
-    setIsCorrect(undefined);
-    setIsAnswered(false);
-  }, [index]);
+    if (index < letters.length - 1) {
+      setIndex(index + 1);
+      resetAll();
+    } else {
+      setIsFinished(true);
+    }
+  }, [index, letters.length]);
 
   const onEnterAnswer = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
         if (!isAnswered) {
-          setIsCorrect(!(answer === letters[index].roumaji));
+          const letter = letters[index].roumaji;
+          const correct = answer === letter;
+          setIsCorrect(!correct);
+          if (correct) {
+            setSuccessful((prev) => [...prev, letter]);
+          }
           setIsAnswered(true);
           return;
         }
@@ -581,12 +597,20 @@ export default function PracticePage() {
     [answer, index, isAnswered, letters, onNextQuestion]
   );
 
-  if (isPracticing) {
+  if (isPracticing && !isFinished) {
     return (
       <article>
         <header>
           <h2 style={{ margin: 0 }}>
             Letter {index + 1}/{letters.length}
+            <button
+              style={{ float: 'right', width: 'auto' }}
+              onClick={() => {
+                setIsFinished(true);
+              }}
+            >
+              Finish
+            </button>
           </h2>
         </header>
         <h1>
@@ -604,6 +628,56 @@ export default function PracticePage() {
             autoFocus
           />
           {isAnswered && <button onClick={onNextQuestion}>Next</button>}
+        </footer>
+      </article>
+    );
+  } else if (isFinished) {
+    return (
+      <article>
+        <header>
+          <h2 style={{ margin: 0 }}>Performance Report:</h2>
+        </header>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {letters.map((entry) => (
+            <a
+              href='#'
+              role='button'
+              className={
+                successful.includes(entry.roumaji) ? 'primary' : 'secondary'
+              }
+              style={{ margin: '6px' }}
+            >
+              {entry.kana}
+            </a>
+          ))}
+        </div>
+        <footer>
+          <button
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+          >
+            Retry Set
+          </button>
+          <button
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+          >
+            Retry Failed
+          </button>
+          <button
+            onClick={() => {
+              setIsFinished(false);
+              setIsPracticing(false);
+              resetAll();
+            }}
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+          >
+            Back
+          </button>
         </footer>
       </article>
     );
