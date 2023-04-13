@@ -15,7 +15,7 @@ export default function Layout() {
       >
         <ul>
           <li>
-            <strong>Solodite</strong>
+            <img alt='logo' src='/logo.svg' style={{ width: '192px' }} />
           </li>
         </ul>
         <ul>

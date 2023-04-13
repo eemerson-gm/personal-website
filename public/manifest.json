@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Solodite Utils",
+  "name": "Various utilities from doing things.",
   "icons": [
     {
       "src": "favicon.ico",
