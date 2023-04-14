@@ -1,5 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useCallback, KeyboardEvent, useState } from 'react';
+import { useCallback, KeyboardEvent, useState, useEffect } from 'react';
+import moment, { Moment } from 'moment';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
 type CharType = 'gojuuon' | 'dakuon' | 'handakuon' | 'sokuon' | 'youon';
 interface HiriganaType {
@@ -1071,9 +1082,19 @@ export default function PracticePage() {
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [letters, setLetters] = useState<HiriganaType[]>([]);
   const [successful, setSuccessful] = useState<string[]>([]);
+  const [startTime, setStartTime] = useState<Moment>();
+  const [endTime, setEndTime] = useState<Moment>();
 
+  const [stats, setStats] = useState<number[]>([]);
   const [answer, setAnswer] = useState<string>();
   const [index, setIndex] = useState<number>(0);
+
+  useEffect(() => {
+    const times = localStorage.getItem('stats');
+    if (times) {
+      setStats(times.split(',').map((time) => Number(time)));
+    }
+  }, []);
 
   const getLetters = (letters: HiriganaType[], types: CharType[]) => {
     const tempLetters = letters.filter((entry) => {
@@ -1096,19 +1117,21 @@ export default function PracticePage() {
     setIsAnswered(false);
   };
 
-  const resetAll = () => {
+  const resetAll = useCallback(() => {
+    setStartTime(moment());
     resetAnswer();
     setIsFinished(false);
     setSuccessful([]);
     setIndex(0);
-  };
+  }, []);
 
   const startPractice = useCallback(
     (letters: HiriganaType[], types: CharType[]) => {
+      resetAll();
       setLetters(shuffleArray(getLetters(letters, types)));
       setIsPracticing(true);
     },
-    []
+    [resetAll]
   );
 
   const onNextQuestion = useCallback(() => {
@@ -1116,9 +1139,15 @@ export default function PracticePage() {
       setIndex(index + 1);
       resetAnswer();
     } else {
+      const newEndTime = moment();
+      const timeDiff = newEndTime?.diff(startTime);
+      const newStatTime = [...stats, timeDiff];
+      setEndTime(newEndTime);
+      setStats(newStatTime);
+      localStorage.setItem('stats', newStatTime.toString());
       setIsFinished(true);
     }
-  }, [index, letters.length]);
+  }, [index, letters.length, startTime, stats]);
 
   const onEnterAnswer = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
@@ -1153,6 +1182,7 @@ export default function PracticePage() {
                 width: 'auto',
               }}
               onClick={() => {
+                setEndTime(moment());
                 setIsFinished(true);
               }}
             >
@@ -1193,68 +1223,125 @@ export default function PracticePage() {
     );
   } else if (isFinished) {
     return (
-      <article>
-        <header>
-          <h2 style={{ margin: 0 }}>Performance Report:</h2>
-        </header>
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-          }}
-        >
-          {letters.map((entry) => (
-            <a
-              href='#'
-              role='button'
-              className={
-                successful.includes(entry.roumaji) ? 'primary' : 'secondary'
-              }
-              style={{ margin: '6px' }}
+      <>
+        <article>
+          <header>
+            <h2 style={{ margin: 0 }}>
+              Performance Report:{' '}
+              <div style={{ float: 'right' }}>
+                {moment(endTime?.diff(startTime)).format('mm:ss.SSS')}
+              </div>
+            </h2>
+          </header>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+            }}
+          >
+            {letters.map((entry) => (
+              <a
+                href='#'
+                role='button'
+                className={
+                  successful.includes(entry.roumaji) ? 'primary' : 'secondary'
+                }
+                style={{ margin: '6px' }}
+              >
+                {entry.kana}
+                <hr style={{ borderColor: 'white' }} />
+                {entry.roumaji}
+              </a>
+            ))}
+          </div>
+          <footer>
+            <button
+              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+              onClick={() => {
+                setLetters(shuffleArray(letters));
+                resetAll();
+              }}
             >
-              {entry.kana}
-              <hr style={{ borderColor: 'white' }} />
-              {entry.roumaji}
-            </a>
-          ))}
-        </div>
-        <footer>
-          <button
-            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-            onClick={() => {
-              setLetters(shuffleArray(letters));
-              resetAll();
-            }}
-          >
-            Retry Set
-          </button>
-          <button
-            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-            onClick={() => {
-              setLetters(
-                shuffleArray(
-                  letters.filter((entry) => {
-                    return !successful.includes(entry.roumaji);
-                  })
-                )
-              );
-              resetAll();
-            }}
-          >
-            Retry Failed
-          </button>
-          <button
-            onClick={() => {
-              setIsPracticing(false);
-              resetAll();
-            }}
-            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-          >
-            Back
-          </button>
-        </footer>
-      </article>
+              Retry Set
+            </button>
+            <button
+              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+              onClick={() => {
+                setLetters(
+                  shuffleArray(
+                    letters.filter((entry) => {
+                      return !successful.includes(entry.roumaji);
+                    })
+                  )
+                );
+                resetAll();
+              }}
+            >
+              Retry Failed
+            </button>
+            <button
+              onClick={() => {
+                setIsPracticing(false);
+                resetAll();
+              }}
+              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+            >
+              Back
+            </button>
+          </footer>
+        </article>
+        {stats.length ? (
+          <article>
+            <header>
+              <h2 style={{ margin: 0 }}>
+                Performance History:{' '}
+                <button
+                  style={{
+                    float: 'right',
+                    display: 'inline-block',
+                    width: 'auto',
+                  }}
+                  onClick={() => {
+                    setStats([]);
+                    localStorage.removeItem('stats');
+                  }}
+                >
+                  Reset
+                </button>
+              </h2>
+            </header>
+            <Line
+              options={{
+                scales: {
+                  x: {
+                    title: {
+                      display: true,
+                      text: 'Attempt',
+                    },
+                  },
+                  y: {
+                    title: {
+                      display: true,
+                      text: 'Seconds',
+                    },
+                  },
+                },
+              }}
+              data={{
+                labels: stats?.map((_, index) => `#${index + 1}`),
+                datasets: [
+                  {
+                    data: stats.map((stat) => stat / 1000),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  },
+                ],
+              }}
+            />
+          </article>
+        ) : null}
+      </>
     );
   } else {
     return (
