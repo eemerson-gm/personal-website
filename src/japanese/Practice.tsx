@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useCallback, KeyboardEvent, useState, useEffect } from 'react';
-import moment, { Moment } from 'moment';
+import { useCallback, KeyboardEvent, useEffect } from 'react';
+import moment from 'moment';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,15 +9,14 @@ import {
   LineElement,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import {
+  CharType,
+  HiriganaType,
+  PracticeProvider,
+  usePracticeContext,
+} from './PracticeContext';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
-
-type CharType = 'gojuuon' | 'dakuon' | 'handakuon' | 'sokuon' | 'youon';
-interface HiriganaType {
-  kana: string;
-  roumaji: string;
-  type: CharType;
-}
 
 const hirigana = [
   {
@@ -1075,26 +1074,31 @@ const katakana = [
   },
 ] as HiriganaType[];
 
-export default function PracticePage() {
-  const [isPracticing, setIsPracticing] = useState<boolean>(false);
-  const [isCorrect, setIsCorrect] = useState<boolean | undefined>();
-  const [isAnswered, setIsAnswered] = useState<boolean>(false);
-  const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [letters, setLetters] = useState<HiriganaType[]>([]);
-  const [successful, setSuccessful] = useState<string[]>([]);
-  const [startTime, setStartTime] = useState<Moment>();
-  const [endTime, setEndTime] = useState<Moment>();
+function PracticePage() {
+  const context = usePracticeContext();
 
-  const [stats, setStats] = useState<number[]>([]);
-  const [answer, setAnswer] = useState<string>();
-  const [index, setIndex] = useState<number>(0);
+  const { isPracticing, isFinished, setStats } = context;
 
   useEffect(() => {
     const times = localStorage.getItem('stats');
     if (times) {
       setStats(times.split(',').map((time) => Number(time)));
     }
-  }, []);
+  }, [setStats]);
+
+  if (isPracticing && !isFinished) {
+    return <PracticeQuestions />;
+  } else if (isFinished) {
+    return <PracticeFinished />;
+  } else {
+    return <PracticeStart />;
+  }
+}
+
+function PracticeStart() {
+  const context = usePracticeContext();
+
+  const { setIsPracticing, resetAll, shuffleLetters } = context;
 
   const getLetters = (letters: HiriganaType[], types: CharType[]) => {
     const tempLetters = letters.filter((entry) => {
@@ -1103,51 +1107,107 @@ export default function PracticePage() {
     return tempLetters;
   };
 
-  const shuffleArray = <T,>(array: T[]): T[] => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  };
-
-  const resetAnswer = () => {
-    setAnswer('');
-    setIsCorrect(undefined);
-    setIsAnswered(false);
-  };
-
-  const resetAll = useCallback(() => {
-    setStartTime(moment());
-    resetAnswer();
-    setIsFinished(false);
-    setSuccessful([]);
-    setIndex(0);
-  }, []);
-
   const startPractice = useCallback(
     (letters: HiriganaType[], types: CharType[]) => {
       resetAll();
-      setLetters(shuffleArray(getLetters(letters, types)));
+      shuffleLetters(getLetters(letters, types));
       setIsPracticing(true);
     },
-    [resetAll]
+    [resetAll, setIsPracticing, shuffleLetters]
   );
 
-  const onNextQuestion = useCallback(() => {
-    if (index < letters.length - 1) {
-      setIndex(index + 1);
-      resetAnswer();
-    } else {
-      const newEndTime = moment();
-      const timeDiff = newEndTime?.diff(startTime);
-      const newStatTime = [...stats, timeDiff];
-      setEndTime(newEndTime);
-      setStats(newStatTime);
-      localStorage.setItem('stats', newStatTime.toString());
-      setIsFinished(true);
-    }
-  }, [index, letters.length, startTime, stats]);
+  return (
+    <>
+      <article>
+        <header>
+          <hgroup style={{ margin: 0 }}>
+            <h2>Japanese Practice</h2>
+            <h3>Learn the japanese alphabet with these flash prompts.</h3>
+          </hgroup>
+        </header>
+        <button onClick={() => startPractice(hirigana, ['gojuuon'])}>
+          Hirigana
+        </button>
+        <button onClick={() => startPractice(katakana, ['gojuuon'])}>
+          Katakana
+        </button>
+        <footer>
+          Select an option to start the flash prompts. Your performance will be
+          measured at the end of practice.
+        </footer>
+      </article>
+      <article>
+        <header>
+          <h2 style={{ margin: 0 }}>Hirigana Kanji:</h2>
+        </header>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {getLetters(hirigana, ['gojuuon']).map((entry) => (
+            <a
+              href='#'
+              role='button'
+              className='secondary'
+              style={{ margin: '6px' }}
+            >
+              {entry.kana}
+              <hr style={{ borderColor: 'white' }} />
+              {entry.roumaji}
+            </a>
+          ))}
+        </div>
+      </article>
+      <article>
+        <header>
+          <h2 style={{ margin: 0 }}>Katakana Kanji:</h2>
+        </header>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {getLetters(katakana, ['gojuuon']).map((entry) => (
+            <a
+              href='#'
+              role='button'
+              className='secondary'
+              style={{ margin: '6px' }}
+            >
+              {entry.kana}
+              <hr style={{ borderColor: 'white' }} />
+              {entry.roumaji}
+            </a>
+          ))}
+        </div>
+      </article>
+    </>
+  );
+}
+
+function PracticeQuestions() {
+  const context = usePracticeContext();
+
+  const {
+    isCorrect,
+    isAnswered,
+    letters,
+    answer,
+    index,
+    setIsCorrect,
+    setIsAnswered,
+    setIsFinished,
+    setSuccessful,
+    setEndTime,
+    setAnswer,
+    setIndex,
+    nextQuestion,
+  } = context;
 
   const onEnterAnswer = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
@@ -1162,259 +1222,214 @@ export default function PracticePage() {
           setIsAnswered(true);
           return;
         }
-        onNextQuestion();
+        nextQuestion();
       }
     },
-    [answer, index, isAnswered, letters, onNextQuestion]
+    [
+      answer,
+      index,
+      isAnswered,
+      letters,
+      nextQuestion,
+      setIsAnswered,
+      setIsCorrect,
+      setSuccessful,
+    ]
   );
 
-  if (isPracticing && !isFinished) {
-    return (
+  return (
+    <article>
+      <header>
+        <h2 style={{ margin: 0 }}>
+          Letter {index + 1}/{letters.length}
+          <button
+            style={{
+              float: 'right',
+              margin: '4px',
+              display: 'inline-block',
+              width: 'auto',
+            }}
+            onClick={() => {
+              setEndTime(moment());
+              setIsFinished(true);
+            }}
+          >
+            Finish
+          </button>
+          <button
+            style={{
+              float: 'right',
+              margin: '4px',
+              display: 'inline-block',
+              width: 'auto',
+            }}
+            onClick={() => {
+              setIndex(index + 1);
+            }}
+          >
+            Skip
+          </button>
+        </h2>
+      </header>
+      <h1>
+        {letters[index].kana} {isAnswered && `→ ${letters[index].roumaji}`}
+      </h1>
+      <footer>
+        <input
+          type='text'
+          placeholder='Type your answer...'
+          readOnly={isAnswered}
+          onChange={(e) => setAnswer(e.target.value.toLowerCase())}
+          onKeyDown={onEnterAnswer}
+          aria-invalid={isCorrect}
+          value={answer}
+          autoFocus
+        />
+        {isAnswered && <button onClick={nextQuestion}>Next</button>}
+      </footer>
+    </article>
+  );
+}
+
+function PracticeFinished() {
+  const context = usePracticeContext();
+  const {
+    letters,
+    successful,
+    startTime,
+    endTime,
+    stats,
+    setIsPracticing,
+    setStats,
+    resetAll,
+    shuffleLetters,
+  } = context;
+
+  return (
+    <>
       <article>
         <header>
           <h2 style={{ margin: 0 }}>
-            Letter {index + 1}/{letters.length}
-            <button
-              style={{
-                float: 'right',
-                margin: '4px',
-                display: 'inline-block',
-                width: 'auto',
-              }}
-              onClick={() => {
-                setEndTime(moment());
-                setIsFinished(true);
-              }}
-            >
-              Finish
-            </button>
-            <button
-              style={{
-                float: 'right',
-                margin: '4px',
-                display: 'inline-block',
-                width: 'auto',
-              }}
-              onClick={() => {
-                setIndex(index + 1);
-              }}
-            >
-              Skip
-            </button>
+            Performance Report:{' '}
+            <div style={{ float: 'right' }}>
+              {moment(endTime?.diff(startTime)).format('mm:ss.SSS')}
+            </div>
           </h2>
         </header>
-        <h1>
-          {letters[index].kana} {isAnswered && `→ ${letters[index].roumaji}`}
-        </h1>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
+        >
+          {letters.map((entry) => (
+            <a
+              href='#'
+              role='button'
+              className={
+                successful.includes(entry.roumaji) ? 'primary' : 'secondary'
+              }
+              style={{ margin: '6px' }}
+            >
+              {entry.kana}
+              <hr style={{ borderColor: 'white' }} />
+              {entry.roumaji}
+            </a>
+          ))}
+        </div>
         <footer>
-          <input
-            type='text'
-            placeholder='Type your answer...'
-            readOnly={isAnswered}
-            onChange={(e) => setAnswer(e.target.value.toLowerCase())}
-            onKeyDown={onEnterAnswer}
-            aria-invalid={isCorrect}
-            value={answer}
-            autoFocus
-          />
-          {isAnswered && <button onClick={onNextQuestion}>Next</button>}
+          <button
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+            onClick={() => {
+              shuffleLetters(letters);
+              resetAll();
+            }}
+          >
+            Retry Set
+          </button>
+          <button
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+            onClick={() => {
+              shuffleLetters(
+                letters.filter((entry) => {
+                  return !successful.includes(entry.roumaji);
+                })
+              );
+              resetAll();
+            }}
+          >
+            Retry Failed
+          </button>
+          <button
+            onClick={() => {
+              setIsPracticing(false);
+              resetAll();
+            }}
+            style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
+          >
+            Back
+          </button>
         </footer>
       </article>
-    );
-  } else if (isFinished) {
-    return (
-      <>
+      {stats.length ? (
         <article>
           <header>
             <h2 style={{ margin: 0 }}>
-              Performance Report:{' '}
-              <div style={{ float: 'right' }}>
-                {moment(endTime?.diff(startTime)).format('mm:ss.SSS')}
-              </div>
+              Performance History:{' '}
+              <button
+                style={{
+                  float: 'right',
+                  display: 'inline-block',
+                  width: 'auto',
+                }}
+                onClick={() => {
+                  setStats([]);
+                  localStorage.removeItem('stats');
+                }}
+              >
+                Reset
+              </button>
             </h2>
           </header>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-            }}
-          >
-            {letters.map((entry) => (
-              <a
-                href='#'
-                role='button'
-                className={
-                  successful.includes(entry.roumaji) ? 'primary' : 'secondary'
-                }
-                style={{ margin: '6px' }}
-              >
-                {entry.kana}
-                <hr style={{ borderColor: 'white' }} />
-                {entry.roumaji}
-              </a>
-            ))}
-          </div>
-          <footer>
-            <button
-              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-              onClick={() => {
-                setLetters(shuffleArray(letters));
-                resetAll();
-              }}
-            >
-              Retry Set
-            </button>
-            <button
-              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-              onClick={() => {
-                setLetters(
-                  shuffleArray(
-                    letters.filter((entry) => {
-                      return !successful.includes(entry.roumaji);
-                    })
-                  )
-                );
-                resetAll();
-              }}
-            >
-              Retry Failed
-            </button>
-            <button
-              onClick={() => {
-                setIsPracticing(false);
-                resetAll();
-              }}
-              style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
-            >
-              Back
-            </button>
-          </footer>
-        </article>
-        {stats.length ? (
-          <article>
-            <header>
-              <h2 style={{ margin: 0 }}>
-                Performance History:{' '}
-                <button
-                  style={{
-                    float: 'right',
-                    display: 'inline-block',
-                    width: 'auto',
-                  }}
-                  onClick={() => {
-                    setStats([]);
-                    localStorage.removeItem('stats');
-                  }}
-                >
-                  Reset
-                </button>
-              </h2>
-            </header>
-            <Line
-              options={{
-                scales: {
-                  x: {
-                    title: {
-                      display: true,
-                      text: 'Attempt',
-                    },
-                  },
-                  y: {
-                    title: {
-                      display: true,
-                      text: 'Seconds',
-                    },
+          <Line
+            options={{
+              scales: {
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Attempt',
                   },
                 },
-              }}
-              data={{
-                labels: stats?.map((_, index) => `#${index + 1}`),
-                datasets: [
-                  {
-                    data: stats.map((stat) => stat / 1000),
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                y: {
+                  title: {
+                    display: true,
+                    text: 'Seconds',
                   },
-                ],
-              }}
-            />
-          </article>
-        ) : null}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <article>
-          <header>
-            <hgroup style={{ margin: 0 }}>
-              <h2>Japanese Practice</h2>
-              <h3>Learn the japanese alphabet with these flash prompts.</h3>
-            </hgroup>
-          </header>
-          <button onClick={() => startPractice(hirigana, ['gojuuon'])}>
-            Hirigana
-          </button>
-          <button onClick={() => startPractice(katakana, ['gojuuon'])}>
-            Katakana
-          </button>
-          <footer>
-            Select an option to start the flash prompts. Your performance will
-            be measured at the end of practice.
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h2 style={{ margin: 0 }}>Hirigana Kanji:</h2>
-          </header>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
+                },
+              },
             }}
-          >
-            {getLetters(hirigana, ['gojuuon']).map((entry) => (
-              <a
-                href='#'
-                role='button'
-                className='secondary'
-                style={{ margin: '6px' }}
-              >
-                {entry.kana}
-                <hr style={{ borderColor: 'white' }} />
-                {entry.roumaji}
-              </a>
-            ))}
-          </div>
-        </article>
-        <article>
-          <header>
-            <h2 style={{ margin: 0 }}>Katakana Kanji:</h2>
-          </header>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
+            data={{
+              labels: stats?.map((_, index) => `#${index + 1}`),
+              datasets: [
+                {
+                  data: stats.map((stat) => stat / 1000),
+                  borderColor: 'rgb(255, 99, 132)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+              ],
             }}
-          >
-            {getLetters(katakana, ['gojuuon']).map((entry) => (
-              <a
-                href='#'
-                role='button'
-                className='secondary'
-                style={{ margin: '6px' }}
-              >
-                {entry.kana}
-                <hr style={{ borderColor: 'white' }} />
-                {entry.roumaji}
-              </a>
-            ))}
-          </div>
+          />
         </article>
-      </>
-    );
-  }
+      ) : null}
+    </>
+  );
+}
+
+export default function PracticeWrapper() {
+  return (
+    <PracticeProvider>
+      <PracticePage />
+    </PracticeProvider>
+  );
 }
