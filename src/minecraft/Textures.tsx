@@ -45,7 +45,7 @@ const asyncEach = <T,>(
   }
 };
 
-export default function KubeJSPage() {
+export default function TexturesPage() {
   const [progress, setProgress] = useState<Progress>();
 
   const [imageFile, setImageFile] = useState<File>();
@@ -173,21 +173,19 @@ export default function KubeJSPage() {
       <article>
         <header>
           <hgroup style={{ margin: 0 }}>
-            <h2>KubeJS Editor</h2>
-            <h3>Create custom recipes using items from your modpack.</h3>
+            <h2>Texture Extractor</h2>
+            <h3>Extract sprites from your minecraft modpack.</h3>
           </hgroup>
         </header>
-        <label htmlFor='image'>Upload Image:</label>
+        <label>Upload Image:</label>
         <input
-          id='image'
           type='file'
           onChange={(e) => {
             if (e.target.files) setImageFile(e.target.files[0]);
           }}
         />
-        <label htmlFor='image'>Upload Atlas:</label>
+        <label>Upload Atlas:</label>
         <input
-          id='atlas'
           type='file'
           onChange={(e) => {
             if (e.target.files) setAtlasFile(e.target.files[0]);

@@ -26,7 +26,10 @@ export default function Layout() {
               </summary>
               <ul role='listbox'>
                 <li>
-                  <a href='/minecraft/kubejs'>KubeJS</a>
+                  <a href='/minecraft/recipes'>Recipes</a>
+                </li>
+                <li>
+                  <a href='/minecraft/textures'>Textures</a>
                 </li>
                 <li>
                   <a href='/minecraft/startup'>Startup</a>

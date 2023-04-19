@@ -115,8 +115,8 @@ export default function StartupPage() {
               <h3>Check which mod is taking up all your load time.</h3>
             </hgroup>
           </header>
-          <label htmlFor='log'>Upload Log:</label>
-          <input id='log' type='file' accept='.log' onChange={onUpload} />
+          <label>Upload Log:</label>
+          <input type='file' accept='.log' onChange={onUpload} />
           <footer>
             <ol>
               <li>Start your modpack.</li>
