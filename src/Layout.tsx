@@ -1,9 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
 export default function Layout() {
-  const randomMax = (max: number) => {
-    return Math.round(Math.random() * max);
-  };
   return (
     <>
       <nav
@@ -20,7 +17,7 @@ export default function Layout() {
           <li style={{ padding: '2px' }}>
             <img
               alt='logo'
-              src={`/logos/${randomMax(10)}.png`}
+              src={`/logo.png`}
               style={{
                 width: '48px',
                 imageRendering: 'pixelated',
