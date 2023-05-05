@@ -20,8 +20,8 @@ export default function RecipesPage() {
     for (let n = 0; n < 10; n++) {
       recipeJSON = recipeJSON.replaceAll(`${n}b`, `"${n}"`);
     }
-    // eslint-disable-next-line no-eval
     const patternKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    // eslint-disable-next-line
     const recipeItems = eval(recipeJSON) as Ingredient[];
     const recipeUniques = recipeItems
       .filter(

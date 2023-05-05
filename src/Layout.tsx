@@ -9,7 +9,7 @@ export default function Layout() {
           position: 'sticky',
           zIndex: 99,
           top: 0,
-          backgroundColor: '#11191f',
+          backgroundColor: 'var(--background-color)',
           boxShadow: 'rgba(115, 130, 140, 0.2) 0px 1px 0px 0px',
         }}
       >

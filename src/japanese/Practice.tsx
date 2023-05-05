@@ -1149,6 +1149,7 @@ function PracticeStart() {
         >
           {getLetters(hirigana, ['gojuuon']).map((entry) => (
             <a
+              key={entry.roumaji}
               href='#'
               role='button'
               className='secondary'
@@ -1174,6 +1175,7 @@ function PracticeStart() {
         >
           {getLetters(katakana, ['gojuuon']).map((entry) => (
             <a
+              key={entry.roumaji}
               href='#'
               role='button'
               className='secondary'
@@ -1325,6 +1327,7 @@ function PracticeFinished() {
         >
           {letters.map((entry) => (
             <a
+              key={entry.roumaji}
               href='#'
               role='button'
               className={
