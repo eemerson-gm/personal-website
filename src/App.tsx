@@ -4,8 +4,9 @@ import '@picocss/pico';
 import Layout from './Layout';
 import StartupPage from './minecraft/Startup';
 import TexturesPage from './minecraft/Textures';
-import PracticePage from './japanese/Practice';
+import PracticePage from './misc/Practice';
 import RecipesPage from './minecraft/Recipes';
+import FinancePage from './misc/Finance';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
@@ -19,7 +20,8 @@ export default function App() {
             <Route path='/minecraft/startup' element={<StartupPage />} />
             <Route path='/minecraft/textures' element={<TexturesPage />} />
             <Route path='/minecraft/recipes' element={<RecipesPage />} />
-            <Route path='/japanese/practice' element={<PracticePage />} />
+            <Route path='/misc/japanese' element={<PracticePage />} />
+            <Route path='/misc/finance' element={<FinancePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

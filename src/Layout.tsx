@@ -32,9 +32,12 @@ export default function Layout() {
           <li>
             <details role='list' dir='rtl'>
               <summary aria-haspopup='listbox' role='link'>
-                Minecraft
+                Navigator
               </summary>
               <ul role='listbox'>
+                <li style={{ backgroundColor: 'var(--mark-color)' }}>
+                  Minecraft
+                </li>
                 <li>
                   <a href='/minecraft/recipes'>Recipes</a>
                 </li>
@@ -44,17 +47,12 @@ export default function Layout() {
                 <li>
                   <a href='/minecraft/startup'>Startup</a>
                 </li>
-              </ul>
-            </details>
-          </li>
-          <li>
-            <details role='list' dir='rtl'>
-              <summary aria-haspopup='listbox' role='link'>
-                Japanese
-              </summary>
-              <ul role='listbox'>
+                <li style={{ backgroundColor: 'var(--mark-color)' }}>Misc</li>
                 <li>
-                  <a href='/japanese/practice'>Practice</a>
+                  <a href='/misc/japanese'>Japanese</a>
+                </li>
+                <li>
+                  <a href='/misc/finance'>Finance</a>
                 </li>
               </ul>
             </details>
