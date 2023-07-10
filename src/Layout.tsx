@@ -39,6 +39,9 @@ export default function Layout() {
                   Minecraft
                 </li>
                 <li>
+                  <a href='/minecraft/commands'>Commands</a>
+                </li>
+                <li>
                   <a href='/minecraft/recipes'>Recipes</a>
                 </li>
                 <li>
