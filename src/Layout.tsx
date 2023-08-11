@@ -17,29 +17,27 @@ export default function Layout() {
           <li style={{ padding: '2px' }}>
             <img
               alt='logo'
-              src={`/logo.png`}
+              src={`/images/logo.png`}
               style={{
                 width: '48px',
-                imageRendering: 'pixelated',
               }}
             />
           </li>
           <li>
-            <h2 style={{ margin: 0 }}>Kupoapo</h2>
+            <a href='/' style={{ padding: 0 }}>
+              <h2 style={{ margin: 0 }}>Kupoapo</h2>
+            </a>
           </li>
         </ul>
         <ul>
           <li>
             <details role='list' dir='rtl'>
               <summary aria-haspopup='listbox' role='link'>
-                Navigator
+                Pages
               </summary>
               <ul role='listbox'>
                 <li style={{ backgroundColor: 'var(--mark-color)' }}>
                   Minecraft
-                </li>
-                <li>
-                  <a href='/minecraft/commands'>Commands</a>
                 </li>
                 <li>
                   <a href='/minecraft/recipes'>Recipes</a>
@@ -50,12 +48,9 @@ export default function Layout() {
                 <li>
                   <a href='/minecraft/startup'>Startup</a>
                 </li>
-                <li style={{ backgroundColor: 'var(--mark-color)' }}>Misc</li>
+                <li style={{ backgroundColor: 'var(--mark-color)' }}>Other</li>
                 <li>
-                  <a href='/misc/japanese'>Japanese</a>
-                </li>
-                <li>
-                  <a href='/misc/finance'>Finance</a>
+                  <a href='/other/japanese'>Japanese</a>
                 </li>
               </ul>
             </details>

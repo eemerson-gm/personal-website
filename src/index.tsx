@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
+import { Chart, registerables } from 'chart.js';
 import 'react-toastify/dist/ReactToastify.css';
 import './Shared.css';
-import { Chart, registerables } from 'chart.js';
 
 Chart.register(...registerables);
 
