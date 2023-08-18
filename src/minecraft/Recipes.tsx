@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 interface Ingredient {
@@ -13,6 +13,7 @@ export default function RecipesPage() {
   const [crafting, setCrafting] = useState<string>('');
   const [shapedCode, setShapedCode] = useState<string>('');
   const [shapelessCode, setShapelessCode] = useState<string>('');
+  const [isErrored, setIsErrored] = useState<boolean>(true);
 
   const parseCrafting = useCallback(() => {
     const recipeRaw = crafting.substring(crafting.indexOf('{'));
@@ -20,8 +21,8 @@ export default function RecipesPage() {
     for (let n = 0; n < 10; n++) {
       recipeJSON = recipeJSON.replaceAll(`${n}b`, `"${n}"`);
     }
-    // eslint-disable-next-line no-eval
     const patternKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+    // eslint-disable-next-line no-eval
     const recipeItems = eval(recipeJSON) as Ingredient[];
     const recipeUniques = recipeItems
       .filter(
@@ -53,24 +54,41 @@ export default function RecipesPage() {
     );
   }, [amount, crafting]);
 
-  const copyToClipboard = useCallback((text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard.', {
-      position: 'top-right',
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: 'dark',
-    });
-  }, []);
+  const copyToClipboard = useCallback(
+    (text: string) => {
+      if (isErrored) {
+        toast.error('Error: Failed to create recipe', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        });
+        return;
+      }
+      navigator.clipboard.writeText(text);
+      toast.success('Copied to clipboard.', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    },
+    [isErrored]
+  );
 
   useEffect(() => {
     if (crafting) {
       try {
         parseCrafting();
+        setIsErrored(false);
       } catch (error: any) {
         toast.error(`Error: ${error.message}`, {
           position: 'top-right',
@@ -82,12 +100,10 @@ export default function RecipesPage() {
           progress: undefined,
           theme: 'dark',
         });
-        console.log(error.message);
+        setIsErrored(true);
       }
     }
   }, [crafting, parseCrafting]);
-
-  console.log(amount, shapedCode);
 
   return (
     <article>

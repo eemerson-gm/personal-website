@@ -45,9 +45,6 @@ export default function Layout() {
                 <li>
                   <a href='/minecraft/textures'>Textures</a>
                 </li>
-                <li>
-                  <a href='/minecraft/startup'>Startup</a>
-                </li>
                 <li style={{ backgroundColor: 'var(--mark-color)' }}>Other</li>
                 <li>
                   <a href='/other/japanese'>Japanese</a>

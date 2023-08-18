@@ -48,11 +48,13 @@ export default function StartupPage() {
         const text = event.target?.result;
         const extract = require('extract-string');
         const entries = extract(text)
-          .pattern('[{time}] [{type}] [{name}/]: {message}')
+          .pattern('[{time}] [{type}]: [{name}]: {message}')
           .map((entry: LogString) => ({
             ...entry,
-            time: moment(entry.time, 'DDMMMYYYY hh:mm:ss.SSS'),
+            time: moment(entry.time, 'hh:mm:ss'),
           })) as LogEntry[];
+
+        console.log(entries);
         let tempLoadTimes = [] as LoadTime[];
         let tempHighLoadTimes = [] as HighLoadTime[];
         for (let i = 0; i < entries.length; i++) {
