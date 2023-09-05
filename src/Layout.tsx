@@ -40,14 +40,17 @@ export default function Layout() {
                   Minecraft
                 </li>
                 <li>
-                  <a href='/minecraft/recipes'>Recipes</a>
+                  <a href='/recipes'>Recipes</a>
                 </li>
                 <li>
-                  <a href='/minecraft/textures'>Textures</a>
+                  <a href='/textures'>Textures</a>
                 </li>
                 <li style={{ backgroundColor: 'var(--mark-color)' }}>Other</li>
                 <li>
-                  <a href='/other/japanese'>Japanese</a>
+                  <a href='/japanese'>Japanese</a>
+                </li>
+                <li>
+                  <a href='/notes'>Notes</a>
                 </li>
               </ul>
             </details>
