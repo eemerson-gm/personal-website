@@ -5,8 +5,8 @@ import Layout from './Layout';
 import HomePage from './Home';
 import TexturesPage from './minecraft/Textures';
 import RecipesPage from './minecraft/Recipes';
-import PracticePage from './other/Practice';
-import NotesPage from './other/Notes';
+import { Notes } from './other/Notes';
+import { Japanese } from './other/Japanese';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
@@ -20,8 +20,8 @@ export default function App() {
             <Route index element={<HomePage />} />
             <Route path='/textures' element={<TexturesPage />} />
             <Route path='/recipes' element={<RecipesPage />} />
-            <Route path='/japanese' element={<PracticePage />} />
-            <Route path='/notes' element={<NotesPage />} />
+            <Route path='/japanese' element={<Japanese />} />
+            <Route path='/notes' element={<Notes />} />
           </Route>
         </Routes>
       </BrowserRouter>

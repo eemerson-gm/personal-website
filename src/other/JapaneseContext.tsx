@@ -1,16 +1,9 @@
 import moment from 'moment';
 import { Moment } from 'moment';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { HiriganaType } from './JapaneseLanguage';
 
-type CharType = 'gojuuon' | 'dakuon' | 'handakuon' | 'sokuon' | 'youon';
-
-interface HiriganaType {
-  kana: string;
-  roumaji: string;
-  type: CharType;
-}
-
-interface PracticeProps {
+interface JapaneseProps {
   isPracticing: boolean;
   isCorrect: boolean | undefined;
   isAnswered: boolean;
@@ -39,7 +32,7 @@ interface PracticeProps {
   shuffleLetters: (array: HiriganaType[]) => void;
 }
 
-const PracticeContext = createContext<PracticeProps>({
+const JapaneseContext = createContext<JapaneseProps>({
   isPracticing: false,
   isCorrect: undefined,
   isAnswered: false,
@@ -52,59 +45,59 @@ const PracticeContext = createContext<PracticeProps>({
   answer: '',
   index: 0,
   setIsPracticing: function (_value: React.SetStateAction<boolean>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setIsCorrect: function (
     _value: React.SetStateAction<boolean | undefined>
   ): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setIsAnswered: function (_value: React.SetStateAction<boolean>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setIsFinished: function (_value: React.SetStateAction<boolean>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setLetters: function (_value: React.SetStateAction<HiriganaType[]>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setSuccessful: function (_value: React.SetStateAction<string[]>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setStartTime: function (
     _value: React.SetStateAction<Moment | undefined>
   ): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setEndTime: function (
     _value: React.SetStateAction<Moment | undefined>
   ): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setStats: function (_value: React.SetStateAction<number[]>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setAnswer: function (_value: React.SetStateAction<string>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   setIndex: function (_value: React.SetStateAction<number>): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   nextQuestion: function (): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   resetAnswer: function (): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   resetAll: function (): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
   shuffleLetters: function (): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Provider not given.');
   },
 });
 
-function PracticeProvider({ children }: React.PropsWithChildren) {
+const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [isPracticing, setIsPracticing] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>();
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
@@ -166,7 +159,7 @@ function PracticeProvider({ children }: React.PropsWithChildren) {
   }, [resetAnswer]);
 
   return (
-    <PracticeContext.Provider
+    <JapaneseContext.Provider
       value={{
         isPracticing,
         isCorrect,
@@ -197,13 +190,12 @@ function PracticeProvider({ children }: React.PropsWithChildren) {
       }}
     >
       {children}
-    </PracticeContext.Provider>
+    </JapaneseContext.Provider>
   );
+};
+
+function useJapaneseContext() {
+  return useContext(JapaneseContext);
 }
 
-function usePracticeContext() {
-  return useContext(PracticeContext);
-}
-
-export { PracticeProvider, usePracticeContext };
-export type { HiriganaType, CharType };
+export { JapaneseProvider, useJapaneseContext };

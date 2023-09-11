@@ -1,17 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const storageNotes = localStorage.getItem('notes')?.split(',') || [''];
 
-export default function NotesPage() {
+const Notes = () => {
   const [notes, setNotes] = useState<string[]>(storageNotes);
 
-  const saveNotes = useCallback(() => {
+  useEffect(() => {
     localStorage.setItem('notes', notes.toString());
   }, [notes]);
-
-  useEffect(() => {
-    saveNotes();
-  }, [notes, saveNotes]);
 
   return (
     <>
@@ -76,4 +72,6 @@ export default function NotesPage() {
       </article>
     </>
   );
-}
+};
+
+export { Notes };
