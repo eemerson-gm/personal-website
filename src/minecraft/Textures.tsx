@@ -45,7 +45,7 @@ const asyncEach = <T,>(
   }
 };
 
-export default function TexturesPage() {
+const Textures = () => {
   const [progress, setProgress] = useState<Progress>();
 
   const [imageFile, setImageFile] = useState<File>();
@@ -257,4 +257,6 @@ export default function TexturesPage() {
       </div>
     </>
   );
-}
+};
+
+export { Textures };

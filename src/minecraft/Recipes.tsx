@@ -8,7 +8,7 @@ interface Ingredient {
   tag?: any;
 }
 
-export default function RecipesPage() {
+const Recipes = () => {
   const [amount, setAmount] = useState<number>(1);
   const [crafting, setCrafting] = useState<string>('');
   const [shapedCode, setShapedCode] = useState<string>('');
@@ -164,4 +164,6 @@ export default function RecipesPage() {
       </footer>
     </article>
   );
-}
+};
+
+export { Recipes };

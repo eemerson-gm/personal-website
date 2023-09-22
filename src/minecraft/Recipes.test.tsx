@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { toast } from 'react-toastify';
 import { render, screen } from '@testing-library/react';
-import RecipesPage from './Recipes';
+import { Recipes } from './Recipes';
 import userEvent from '@testing-library/user-event';
 
 const testInput = `/setblock 10 -60 1 minecraft:crafting_table{
@@ -32,9 +32,12 @@ Object.assign(navigator, {
 });
 
 describe('Recipes', () => {
-  it('renders the page', () => {
-    render(<RecipesPage />);
+  beforeEach(() => {
+    // eslint-disable-next-line testing-library/no-render-in-setup
+    render(<Recipes />);
+  });
 
+  it('renders the page', () => {
     expect(
       screen.getByRole('heading', { name: 'Recipe to Clipboard' })
     ).toBeInTheDocument();
@@ -42,8 +45,6 @@ describe('Recipes', () => {
 
   describe('Success', () => {
     it('shows a success message when copying a shaped recipe', async () => {
-      render(<RecipesPage />);
-
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         testInput
@@ -58,8 +59,6 @@ describe('Recipes', () => {
     });
 
     it('shows a success message when copying a shapeless recipe', async () => {
-      render(<RecipesPage />);
-
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         testInput
@@ -75,8 +74,6 @@ describe('Recipes', () => {
 
   describe('Error', () => {
     it('shows an error message when pasting bad data', async () => {
-      render(<RecipesPage />);
-
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         '{}'
@@ -88,16 +85,12 @@ describe('Recipes', () => {
     });
 
     it('shows an error message when failing to copy a shaped recipe', async () => {
-      render(<RecipesPage />);
-
       userEvent.click(screen.getByRole('button', { name: 'Copy Shaped' }));
 
       expect(toast.error).toBeCalled();
     });
 
     it('shows an error message when failing to copy a shapeless recipe', async () => {
-      render(<RecipesPage />);
-
       userEvent.click(screen.getByRole('button', { name: 'Copy Shapeless' }));
 
       expect(toast.error).toBeCalled();

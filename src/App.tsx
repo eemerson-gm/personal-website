@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import '@picocss/pico';
 import Layout from './Layout';
-import HomePage from './Home';
-import TexturesPage from './minecraft/Textures';
-import RecipesPage from './minecraft/Recipes';
+import { Home } from './Home';
+import { Textures } from './minecraft/Textures';
+import { Recipes } from './minecraft/Recipes';
 import { Notes } from './other/Notes';
 import { Japanese } from './other/Japanese';
 
@@ -17,9 +17,9 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path='/textures' element={<TexturesPage />} />
-            <Route path='/recipes' element={<RecipesPage />} />
+            <Route index element={<Home />} />
+            <Route path='/textures' element={<Textures />} />
+            <Route path='/recipes' element={<Recipes />} />
             <Route path='/japanese' element={<Japanese />} />
             <Route path='/notes' element={<Notes />} />
           </Route>
