@@ -26,7 +26,7 @@ const JapaneseStart = () => {
       <article>
         <header>
           <hgroup style={{ margin: 0 }}>
-            <h2>Japanese Japanese</h2>
+            <h2>Japanese Practice</h2>
             <h3>Learn the japanese alphabet with these flash prompts.</h3>
           </hgroup>
         </header>
@@ -38,7 +38,7 @@ const JapaneseStart = () => {
         </button>
         <footer>
           Select an option to start the flash prompts. Your performance will be
-          measured at the end of Japanese.
+          measured at the end of practice.
         </footer>
       </article>
       <article>
