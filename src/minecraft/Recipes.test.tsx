@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import { toast } from 'react-toastify';
 import { render, screen } from '@testing-library/react';
 import { Recipes } from './Recipes';
@@ -32,12 +31,8 @@ Object.assign(navigator, {
 });
 
 describe('Recipes', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line testing-library/no-render-in-setup
-    render(<Recipes />);
-  });
-
   it('renders the page', () => {
+    render(<Recipes />);
     expect(
       screen.getByRole('heading', { name: 'Recipe to Clipboard' })
     ).toBeInTheDocument();
@@ -45,13 +40,12 @@ describe('Recipes', () => {
 
   describe('Success', () => {
     it('shows a success message when copying a shaped recipe', async () => {
+      render(<Recipes />);
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         testInput
       );
-
       userEvent.click(screen.getByRole('button', { name: 'Copy Shaped' }));
-
       expect(navigator.clipboard.writeText)
         .toBeCalledWith(`replaceShaped(1, "??????????", ["ABC","DEF","GHI"],{
         A: "minecraft:grass_block",B: "minecraft:podzol",C: "minecraft:mycelium",D: "minecraft:clay",E: "minecraft:gravel",F: "minecraft:sand",G: "minecraft:prismarine",H: "minecraft:magma_block",I: "minecraft:obsidian"
@@ -59,13 +53,12 @@ describe('Recipes', () => {
     });
 
     it('shows a success message when copying a shapeless recipe', async () => {
+      render(<Recipes />);
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         testInput
       );
-
       userEvent.click(screen.getByRole('button', { name: 'Copy Shapeless' }));
-
       expect(navigator.clipboard.writeText).toBeCalledWith(
         `replaceShapeless(1, "??????????", ["minecraft:grass_block","minecraft:podzol","minecraft:mycelium","minecraft:clay","minecraft:gravel","minecraft:sand","minecraft:prismarine","minecraft:magma_block","minecraft:obsidian"])`
       );
@@ -74,25 +67,24 @@ describe('Recipes', () => {
 
   describe('Error', () => {
     it('shows an error message when pasting bad data', async () => {
+      render(<Recipes />);
       userEvent.paste(
         screen.getByPlaceholderText('Paste your data here...'),
         '{}'
       );
-
       userEvent.click(screen.getByRole('button', { name: 'Copy Shaped' }));
-
       expect(toast.error).toBeCalled();
     });
 
     it('shows an error message when failing to copy a shaped recipe', async () => {
+      render(<Recipes />);
       userEvent.click(screen.getByRole('button', { name: 'Copy Shaped' }));
-
       expect(toast.error).toBeCalled();
     });
 
     it('shows an error message when failing to copy a shapeless recipe', async () => {
+      render(<Recipes />);
       userEvent.click(screen.getByRole('button', { name: 'Copy Shapeless' }));
-
       expect(toast.error).toBeCalled();
     });
   });

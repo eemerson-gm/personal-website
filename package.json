@@ -57,8 +57,5 @@
     "@testing-library/react": "^14.0.0",
     "@types/async": "^3.2.18",
     "react-router-dom": "^6.10.0"
-  },
-  "jest": {
-    "testEnvironment": "jsdom"
   }
 }

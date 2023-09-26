@@ -49,9 +49,6 @@ export default function Layout() {
                 <li>
                   <a href='/japanese'>Japanese</a>
                 </li>
-                <li>
-                  <a href='/notes'>Notes</a>
-                </li>
               </ul>
             </details>
           </li>

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { MouseEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ItemEntry {
   id: string;
@@ -55,7 +55,7 @@ const Textures = () => {
 
   const [itemList, setItemList] = useState<ItemEntry[]>();
 
-  const onSubmit = (event: MouseEvent<HTMLButtonElement>) => {
+  const onSubmit = () => {
     if (imageFile && atlasFile) {
       const imageReader = new FileReader();
       const atlasReader = new FileReader();
