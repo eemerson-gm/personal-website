@@ -1,18 +1,31 @@
+import { PreviewCard } from './components/PreviewCard';
+
 const Home = () => {
   return (
     <>
       <div
         style={{
+          paddingTop: '1rem',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
+          flexFlow: 'wrap',
+          justifyContent: 'center',
           alignItems: 'center',
+          gap: '1rem',
         }}
       >
-        <img alt='mushroom man' src='/images/home.png' width={96} />
-        <hgroup style={{ textAlign: 'center' }}>
-          <h2>Welcome to Kupoapo</h2>
-          <h3>Here you will find various web ideas and experimental things.</h3>
-        </hgroup>
+        <PreviewCard
+          title='Super Nate Adventure'
+          description='A challenging platforming game released for free on Steam.'
+          image='/images/covers/super_nate.png'
+          link='https://store.steampowered.com/app/1370250/Super_Nate_Adventure/'
+        />
+        <PreviewCard
+          title='Slime Dungeon'
+          description='A simple mobile game about shooting slimes and getting coins.'
+          image='/images/covers/slime_dungeon.jpg'
+          link='https://play.google.com/store/apps/details?id=com.kupoapo.game'
+        />
       </div>
     </>
   );
