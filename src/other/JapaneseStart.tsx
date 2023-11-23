@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { useJapaneseContext } from './JapaneseContext';
-import { CharType, HiriganaType, hirigana, katakana } from './JapaneseLanguage';
+import { CharType, HiraganaType, Hiragana, katakana } from './JapaneseLanguage';
 
 const JapaneseStart = () => {
   const { setIsPracticing, resetAll, shuffleLetters } = useJapaneseContext();
 
-  const getLetters = (letters: HiriganaType[], types: CharType[]) => {
+  const getLetters = (letters: HiraganaType[], types: CharType[]) => {
     const tempLetters = letters.filter((entry) => {
       return types.includes(entry.type);
     });
@@ -13,7 +13,7 @@ const JapaneseStart = () => {
   };
 
   const startJapanese = useCallback(
-    (letters: HiriganaType[], types: CharType[]) => {
+    (letters: HiraganaType[], types: CharType[]) => {
       resetAll();
       shuffleLetters(getLetters(letters, types));
       setIsPracticing(true);
@@ -30,8 +30,8 @@ const JapaneseStart = () => {
             <h3>Learn the japanese alphabet with these flash prompts.</h3>
           </hgroup>
         </header>
-        <button onClick={() => startJapanese(hirigana, ['gojuuon'])}>
-          Hirigana
+        <button onClick={() => startJapanese(Hiragana, ['gojuuon'])}>
+          Hiragana
         </button>
         <button onClick={() => startJapanese(katakana, ['gojuuon'])}>
           Katakana
@@ -43,7 +43,7 @@ const JapaneseStart = () => {
       </article>
       <article>
         <header>
-          <h2 style={{ margin: 0 }}>Hirigana Kanji:</h2>
+          <h2 style={{ margin: 0 }}>Hiragana:</h2>
         </header>
         <div
           style={{
@@ -52,7 +52,7 @@ const JapaneseStart = () => {
             justifyContent: 'center',
           }}
         >
-          {getLetters(hirigana, ['gojuuon']).map((entry) => (
+          {getLetters(Hiragana, ['gojuuon']).map((entry) => (
             <div role='button' className='secondary' style={{ margin: '6px' }}>
               {entry.kana}
               <hr style={{ borderColor: 'white' }} />
@@ -63,7 +63,7 @@ const JapaneseStart = () => {
       </article>
       <article>
         <header>
-          <h2 style={{ margin: 0 }}>Katakana Kanji:</h2>
+          <h2 style={{ margin: 0 }}>Katakana:</h2>
         </header>
         <div
           style={{

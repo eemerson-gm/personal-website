@@ -1,14 +1,14 @@
 import moment from 'moment';
 import { Moment } from 'moment';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { HiriganaType } from './JapaneseLanguage';
+import { HiraganaType } from './JapaneseLanguage';
 
 interface JapaneseProps {
   isPracticing: boolean;
   isCorrect: boolean | undefined;
   isAnswered: boolean;
   isFinished: boolean;
-  letters: HiriganaType[];
+  letters: HiraganaType[];
   successful: string[];
   startTime: Moment | undefined;
   endTime: Moment | undefined;
@@ -19,7 +19,7 @@ interface JapaneseProps {
   setIsCorrect: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setIsAnswered: React.Dispatch<React.SetStateAction<boolean>>;
   setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
-  setLetters: React.Dispatch<React.SetStateAction<HiriganaType[]>>;
+  setLetters: React.Dispatch<React.SetStateAction<HiraganaType[]>>;
   setSuccessful: React.Dispatch<React.SetStateAction<string[]>>;
   setStartTime: React.Dispatch<React.SetStateAction<Moment | undefined>>;
   setEndTime: React.Dispatch<React.SetStateAction<Moment | undefined>>;
@@ -29,7 +29,7 @@ interface JapaneseProps {
   nextQuestion: () => void;
   resetAnswer: () => void;
   resetAll: () => void;
-  shuffleLetters: (array: HiriganaType[]) => void;
+  shuffleLetters: (array: HiraganaType[]) => void;
 }
 
 const JapaneseContext = createContext<JapaneseProps>({
@@ -58,7 +58,7 @@ const JapaneseContext = createContext<JapaneseProps>({
   setIsFinished: function (_value: React.SetStateAction<boolean>): void {
     throw new Error('Provider not given.');
   },
-  setLetters: function (_value: React.SetStateAction<HiriganaType[]>): void {
+  setLetters: function (_value: React.SetStateAction<HiraganaType[]>): void {
     throw new Error('Provider not given.');
   },
   setSuccessful: function (_value: React.SetStateAction<string[]>): void {
@@ -102,7 +102,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>();
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [letters, setLetters] = useState<HiriganaType[]>([]);
+  const [letters, setLetters] = useState<HiraganaType[]>([]);
   const [successful, setSuccessful] = useState<string[]>([]);
   const [startTime, setStartTime] = useState<Moment | undefined>();
   const [endTime, setEndTime] = useState<Moment | undefined>();
@@ -111,7 +111,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [answer, setAnswer] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
 
-  const shuffleLetters = (array: HiriganaType[]): void => {
+  const shuffleLetters = (array: HiraganaType[]): void => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];

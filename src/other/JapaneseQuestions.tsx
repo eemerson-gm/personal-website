@@ -81,12 +81,13 @@ const JapaneseQuestions = () => {
           </button>
         </h2>
       </header>
-      <h1>
+      <h1 aria-label='letter'>
         {letters[index].kana} {isAnswered && `→ ${letters[index].roumaji}`}
       </h1>
       <footer>
         <input
           type='text'
+          aria-label='answer'
           placeholder='Type your answer...'
           readOnly={isAnswered}
           onChange={(e) => setAnswer(e.target.value.toLowerCase())}
