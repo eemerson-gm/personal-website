@@ -6,7 +6,7 @@ const JapaneseQuestions = () => {
   const {
     isCorrect,
     isAnswered,
-    letters,
+    kanas,
     answer,
     index,
     setIsCorrect,
@@ -23,11 +23,11 @@ const JapaneseQuestions = () => {
     (event: { key: string }) => {
       if (event.key === 'Enter') {
         if (!isAnswered) {
-          const letter = letters[index].roumaji;
-          const correct = answer === letter;
+          const kana = kanas[index].roumaji;
+          const correct = answer === kana;
           setIsCorrect(!correct);
           if (correct) {
-            setSuccessful((prev) => [...prev, letter]);
+            setSuccessful((prev) => [...prev, kana]);
           }
           setIsAnswered(true);
           return;
@@ -39,7 +39,7 @@ const JapaneseQuestions = () => {
       answer,
       index,
       isAnswered,
-      letters,
+      kanas,
       nextQuestion,
       setIsAnswered,
       setIsCorrect,
@@ -51,7 +51,7 @@ const JapaneseQuestions = () => {
     <article>
       <header>
         <h2 style={{ margin: 0 }}>
-          Letter {index + 1}/{letters.length}
+          Letter {index + 1}/{kanas.length}
           <button
             style={{
               float: 'right',
@@ -81,8 +81,8 @@ const JapaneseQuestions = () => {
           </button>
         </h2>
       </header>
-      <h1 aria-label='letter'>
-        {letters[index].kana} {isAnswered && `→ ${letters[index].roumaji}`}
+      <h1 aria-label='kana'>
+        {kanas[index].kana} {isAnswered && `→ ${kanas[index].roumaji}`}
       </h1>
       <footer>
         <input

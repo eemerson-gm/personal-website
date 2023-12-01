@@ -1,6 +1,6 @@
 export type CharType = 'gojuuon' | 'dakuon' | 'handakuon' | 'sokuon' | 'youon';
 
-export interface HiraganaType {
+export interface KanaType {
   kana: string;
   roumaji: string;
   type: CharType;
@@ -532,7 +532,7 @@ const Hiragana = [
     roumaji: 'pyo',
     type: 'youon',
   },
-] as HiraganaType[];
+] as KanaType[];
 
 const katakana = [
   {
@@ -1060,6 +1060,6 @@ const katakana = [
     roumaji: 'pyo',
     type: 'youon',
   },
-] as HiraganaType[];
+] as KanaType[];
 
 export { Hiragana, katakana };

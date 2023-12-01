@@ -1,24 +1,24 @@
 import { useCallback } from 'react';
 import { useJapaneseContext } from './JapaneseContext';
-import { CharType, HiraganaType, Hiragana, katakana } from './JapaneseLanguage';
+import { CharType, KanaType, Hiragana, katakana } from './JapaneseLanguage';
 
 const JapaneseStart = () => {
-  const { setIsPracticing, resetAll, shuffleLetters } = useJapaneseContext();
+  const { setIsPracticing, resetAll, shuffleKanas } = useJapaneseContext();
 
-  const getLetters = (letters: HiraganaType[], types: CharType[]) => {
-    const tempLetters = letters.filter((entry) => {
+  const getLetters = (kanas: KanaType[], types: CharType[]) => {
+    const tempLetters = kanas.filter((entry) => {
       return types.includes(entry.type);
     });
     return tempLetters;
   };
 
   const startJapanese = useCallback(
-    (letters: HiraganaType[], types: CharType[]) => {
+    (kanas: KanaType[], types: CharType[]) => {
       resetAll();
-      shuffleLetters(getLetters(letters, types));
+      shuffleKanas(getLetters(kanas, types));
       setIsPracticing(true);
     },
-    [resetAll, setIsPracticing, shuffleLetters]
+    [resetAll, setIsPracticing, shuffleKanas]
   );
 
   return (

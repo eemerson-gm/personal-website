@@ -4,7 +4,7 @@ import { Line } from 'react-chartjs-2';
 
 const JapaneseFinished = () => {
   const {
-    letters,
+    kanas,
     successful,
     startTime,
     endTime,
@@ -12,7 +12,7 @@ const JapaneseFinished = () => {
     setIsPracticing,
     setStats,
     resetAll,
-    shuffleLetters,
+    shuffleKanas,
   } = useJapaneseContext();
 
   return (
@@ -33,7 +33,7 @@ const JapaneseFinished = () => {
             justifyContent: 'center',
           }}
         >
-          {letters.map((entry) => (
+          {kanas.map((entry) => (
             <div
               role='button'
               className={
@@ -51,7 +51,7 @@ const JapaneseFinished = () => {
           <button
             style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
             onClick={() => {
-              shuffleLetters(letters);
+              shuffleKanas(kanas);
               resetAll();
             }}
           >
@@ -60,8 +60,8 @@ const JapaneseFinished = () => {
           <button
             style={{ margin: '4px', display: 'inline-block', width: 'auto' }}
             onClick={() => {
-              shuffleLetters(
-                letters.filter((entry) => {
+              shuffleKanas(
+                kanas.filter((entry) => {
                   return !successful.includes(entry.roumaji);
                 })
               );

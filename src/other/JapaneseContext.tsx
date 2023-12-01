@@ -1,14 +1,14 @@
 import moment from 'moment';
 import { Moment } from 'moment';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { HiraganaType } from './JapaneseLanguage';
+import { KanaType } from './JapaneseLanguage';
 
 interface JapaneseProps {
   isPracticing: boolean;
   isCorrect: boolean | undefined;
   isAnswered: boolean;
   isFinished: boolean;
-  letters: HiraganaType[];
+  kanas: KanaType[];
   successful: string[];
   startTime: Moment | undefined;
   endTime: Moment | undefined;
@@ -19,7 +19,7 @@ interface JapaneseProps {
   setIsCorrect: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setIsAnswered: React.Dispatch<React.SetStateAction<boolean>>;
   setIsFinished: React.Dispatch<React.SetStateAction<boolean>>;
-  setLetters: React.Dispatch<React.SetStateAction<HiraganaType[]>>;
+  setKanas: React.Dispatch<React.SetStateAction<KanaType[]>>;
   setSuccessful: React.Dispatch<React.SetStateAction<string[]>>;
   setStartTime: React.Dispatch<React.SetStateAction<Moment | undefined>>;
   setEndTime: React.Dispatch<React.SetStateAction<Moment | undefined>>;
@@ -29,7 +29,7 @@ interface JapaneseProps {
   nextQuestion: () => void;
   resetAnswer: () => void;
   resetAll: () => void;
-  shuffleLetters: (array: HiraganaType[]) => void;
+  shuffleKanas: (array: KanaType[]) => void;
 }
 
 const JapaneseContext = createContext<JapaneseProps>({
@@ -37,7 +37,7 @@ const JapaneseContext = createContext<JapaneseProps>({
   isCorrect: undefined,
   isAnswered: false,
   isFinished: false,
-  letters: [],
+  kanas: [],
   successful: [],
   startTime: undefined,
   endTime: undefined,
@@ -58,7 +58,7 @@ const JapaneseContext = createContext<JapaneseProps>({
   setIsFinished: function (_value: React.SetStateAction<boolean>): void {
     throw new Error('Provider not given.');
   },
-  setLetters: function (_value: React.SetStateAction<HiraganaType[]>): void {
+  setKanas: function (_value: React.SetStateAction<KanaType[]>): void {
     throw new Error('Provider not given.');
   },
   setSuccessful: function (_value: React.SetStateAction<string[]>): void {
@@ -92,7 +92,7 @@ const JapaneseContext = createContext<JapaneseProps>({
   resetAll: function (): void {
     throw new Error('Provider not given.');
   },
-  shuffleLetters: function (): void {
+  shuffleKanas: function (): void {
     throw new Error('Provider not given.');
   },
 });
@@ -102,7 +102,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [isCorrect, setIsCorrect] = useState<boolean | undefined>();
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [letters, setLetters] = useState<HiraganaType[]>([]);
+  const [kanas, setKanas] = useState<KanaType[]>([]);
   const [successful, setSuccessful] = useState<string[]>([]);
   const [startTime, setStartTime] = useState<Moment | undefined>();
   const [endTime, setEndTime] = useState<Moment | undefined>();
@@ -111,12 +111,12 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [answer, setAnswer] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
 
-  const shuffleLetters = (array: HiraganaType[]): void => {
+  const shuffleLetters = (array: KanaType[]): void => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
-    setLetters(array);
+    setKanas(array);
   };
 
   const resetAnswer = useCallback(() => {
@@ -126,7 +126,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   }, [setAnswer, setIsAnswered, setIsCorrect]);
 
   const nextQuestion = useCallback(() => {
-    if (index < letters.length - 1) {
+    if (index < kanas.length - 1) {
       setIndex(index + 1);
       resetAnswer();
     } else {
@@ -140,7 +140,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
     }
   }, [
     index,
-    letters.length,
+    kanas.length,
     resetAnswer,
     setEndTime,
     setIndex,
@@ -165,7 +165,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
         isCorrect,
         isAnswered,
         isFinished,
-        letters,
+        kanas,
         successful,
         startTime,
         endTime,
@@ -176,7 +176,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
         setIsCorrect,
         setIsAnswered,
         setIsFinished,
-        setLetters,
+        setKanas,
         setSuccessful,
         setStartTime,
         setEndTime,
@@ -186,7 +186,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
         nextQuestion,
         resetAnswer,
         resetAll,
-        shuffleLetters,
+        shuffleKanas: shuffleLetters,
       }}
     >
       {children}
