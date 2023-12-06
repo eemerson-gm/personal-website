@@ -3,6 +3,11 @@ import { Moment } from 'moment';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { KanaType } from './JapaneseLanguage';
 
+export enum Difficulty {
+  MEDIUM,
+  HARD,
+}
+
 interface JapaneseProps {
   isPracticing: boolean;
   isCorrect: boolean | undefined;
@@ -15,6 +20,7 @@ interface JapaneseProps {
   stats: number[];
   answer: string;
   index: number;
+  difficulty: Difficulty;
   setIsPracticing: React.Dispatch<React.SetStateAction<boolean>>;
   setIsCorrect: React.Dispatch<React.SetStateAction<boolean | undefined>>;
   setIsAnswered: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +32,7 @@ interface JapaneseProps {
   setStats: React.Dispatch<React.SetStateAction<number[]>>;
   setAnswer: React.Dispatch<React.SetStateAction<string>>;
   setIndex: React.Dispatch<React.SetStateAction<number>>;
+  setDifficulty: React.Dispatch<React.SetStateAction<Difficulty>>;
   nextQuestion: () => void;
   resetAnswer: () => void;
   resetAll: () => void;
@@ -44,6 +51,7 @@ const JapaneseContext = createContext<JapaneseProps>({
   stats: [],
   answer: '',
   index: 0,
+  difficulty: Difficulty.MEDIUM,
   setIsPracticing: function (_value: React.SetStateAction<boolean>): void {
     throw new Error('Provider not given.');
   },
@@ -95,6 +103,9 @@ const JapaneseContext = createContext<JapaneseProps>({
   shuffleKanas: function (): void {
     throw new Error('Provider not given.');
   },
+  setDifficulty: function (_value: React.SetStateAction<Difficulty>): void {
+    throw new Error('Function not implemented.');
+  },
 });
 
 const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
@@ -107,11 +118,12 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
   const [startTime, setStartTime] = useState<Moment | undefined>();
   const [endTime, setEndTime] = useState<Moment | undefined>();
 
+  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.MEDIUM);
   const [stats, setStats] = useState<number[]>([]);
   const [answer, setAnswer] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
 
-  const shuffleLetters = (array: KanaType[]): void => {
+  const shuffleKanas = (array: KanaType[]): void => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -172,6 +184,7 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
         stats,
         answer,
         index,
+        difficulty,
         setIsPracticing,
         setIsCorrect,
         setIsAnswered,
@@ -183,10 +196,11 @@ const JapaneseProvider = ({ children }: React.PropsWithChildren) => {
         setStats,
         setAnswer,
         setIndex,
+        setDifficulty,
         nextQuestion,
         resetAnswer,
         resetAll,
-        shuffleKanas: shuffleLetters,
+        shuffleKanas,
       }}
     >
       {children}

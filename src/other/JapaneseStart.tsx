@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
-import { useJapaneseContext } from './JapaneseContext';
+import { Difficulty, useJapaneseContext } from './JapaneseContext';
 import { CharType, KanaType, Hiragana, katakana } from './JapaneseLanguage';
 
 const JapaneseStart = () => {
-  const { setIsPracticing, resetAll, shuffleKanas } = useJapaneseContext();
+  const { setIsPracticing, resetAll, shuffleKanas, setDifficulty } =
+    useJapaneseContext();
 
   const getLetters = (kanas: KanaType[], types: CharType[]) => {
     const tempLetters = kanas.filter((entry) => {
@@ -36,6 +37,39 @@ const JapaneseStart = () => {
         <button onClick={() => startJapanese(katakana, ['gojuuon'])}>
           Katakana
         </button>
+        <fieldset
+          style={{
+            display: 'flex',
+            gap: 16,
+            width: '100%',
+            flexDirection: 'row',
+          }}
+          onChange={(e) =>
+            setDifficulty(
+              Number((e.target as HTMLInputElement).value) as Difficulty
+            )
+          }
+        >
+          <label htmlFor='medium'>
+            <input
+              type='radio'
+              id='medium'
+              name='difficulty'
+              value={Difficulty.MEDIUM}
+              defaultChecked
+            />
+            Medium
+          </label>
+          <label htmlFor='hard'>
+            <input
+              type='radio'
+              id='hard'
+              name='difficulty'
+              value={Difficulty.HARD}
+            />
+            Hard
+          </label>
+        </fieldset>
         <footer>
           Select an option to start the flash prompts. Your performance will be
           measured at the end of practice.
@@ -53,7 +87,12 @@ const JapaneseStart = () => {
           }}
         >
           {getLetters(Hiragana, ['gojuuon']).map((entry) => (
-            <div role='button' className='secondary' style={{ margin: '6px' }}>
+            <div
+              key={entry.roumaji}
+              role='button'
+              className='secondary'
+              style={{ margin: '6px' }}
+            >
               {entry.kana}
               <hr style={{ borderColor: 'white' }} />
               {entry.roumaji}
@@ -73,7 +112,12 @@ const JapaneseStart = () => {
           }}
         >
           {getLetters(katakana, ['gojuuon']).map((entry) => (
-            <div role='button' className='secondary' style={{ margin: '6px' }}>
+            <div
+              key={entry.roumaji}
+              role='button'
+              className='secondary'
+              style={{ margin: '6px' }}
+            >
               {entry.kana}
               <hr style={{ borderColor: 'white' }} />
               {entry.roumaji}

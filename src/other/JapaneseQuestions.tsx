@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { useCallback } from 'react';
-import { useJapaneseContext } from './JapaneseContext';
+import { useCallback, useMemo } from 'react';
+import { Difficulty, useJapaneseContext } from './JapaneseContext';
 
 const JapaneseQuestions = () => {
   const {
@@ -9,6 +9,7 @@ const JapaneseQuestions = () => {
     kanas,
     answer,
     index,
+    difficulty,
     setIsCorrect,
     setIsAnswered,
     setIsFinished,
@@ -18,6 +19,18 @@ const JapaneseQuestions = () => {
     setIndex,
     nextQuestion,
   } = useJapaneseContext();
+
+  const hint = useMemo(() => {
+    switch (difficulty) {
+      case Difficulty.MEDIUM:
+        const letter =
+          kanas[index].roumaji.length > 1 ? kanas[index].roumaji.charAt(0) : '';
+        const blanks = '_'.repeat(kanas[index].roumaji.length - letter.length);
+        return `${letter}${blanks}`;
+      default:
+        return null;
+    }
+  }, [difficulty, index, kanas]);
 
   const onEnterAnswer = useCallback(
     (event: { key: string }) => {
@@ -82,7 +95,7 @@ const JapaneseQuestions = () => {
         </h2>
       </header>
       <h1 aria-label='kana'>
-        {kanas[index].kana} {isAnswered && `→ ${kanas[index].roumaji}`}
+        {kanas[index].kana} {hint} {isAnswered && `→ ${kanas[index].roumaji}`}
       </h1>
       <footer>
         <input
