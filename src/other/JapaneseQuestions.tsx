@@ -87,7 +87,12 @@ const JapaneseQuestions = () => {
               width: 'auto',
             }}
             onClick={() => {
-              setIndex(index + 1);
+              const newIndex = index + 1;
+              if (newIndex > kanas.length - 1) {
+                setIsFinished(true);
+              } else {
+                setIndex(index + 1);
+              }
             }}
           >
             Skip
@@ -95,7 +100,7 @@ const JapaneseQuestions = () => {
         </h2>
       </header>
       <h1 aria-label='kana'>
-        {kanas[index].kana} {hint} {isAnswered && `→ ${kanas[index].roumaji}`}
+        {kanas[index]?.kana} {hint} {isAnswered && `→ ${kanas[index]?.roumaji}`}
       </h1>
       <footer>
         <input

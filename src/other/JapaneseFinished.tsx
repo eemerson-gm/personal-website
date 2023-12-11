@@ -97,7 +97,7 @@ const JapaneseFinished = () => {
                   localStorage.removeItem('stats');
                 }}
               >
-                Reset
+                Clear
               </button>
             </h2>
           </header>

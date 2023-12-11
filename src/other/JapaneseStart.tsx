@@ -3,7 +3,7 @@ import { Difficulty, useJapaneseContext } from './JapaneseContext';
 import { CharType, KanaType, Hiragana, katakana } from './JapaneseLanguage';
 
 const JapaneseStart = () => {
-  const { setIsPracticing, resetAll, shuffleKanas, setDifficulty } =
+  const { difficulty, setIsPracticing, resetAll, shuffleKanas, setDifficulty } =
     useJapaneseContext();
 
   const getLetters = (kanas: KanaType[], types: CharType[]) => {
@@ -56,7 +56,7 @@ const JapaneseStart = () => {
               id='medium'
               name='difficulty'
               value={Difficulty.MEDIUM}
-              defaultChecked
+              checked={difficulty === Difficulty.MEDIUM}
             />
             Medium
           </label>
@@ -66,6 +66,7 @@ const JapaneseStart = () => {
               id='hard'
               name='difficulty'
               value={Difficulty.HARD}
+              checked={difficulty === Difficulty.HARD}
             />
             Hard
           </label>
