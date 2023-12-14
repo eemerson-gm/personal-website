@@ -56,7 +56,7 @@ const JapaneseStart = () => {
               id='medium'
               name='difficulty'
               value={Difficulty.MEDIUM}
-              checked={difficulty === Difficulty.MEDIUM}
+              defaultChecked={difficulty === Difficulty.MEDIUM}
             />
             Medium
           </label>
@@ -66,7 +66,7 @@ const JapaneseStart = () => {
               id='hard'
               name='difficulty'
               value={Difficulty.HARD}
-              checked={difficulty === Difficulty.HARD}
+              defaultChecked={difficulty === Difficulty.HARD}
             />
             Hard
           </label>
