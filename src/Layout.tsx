@@ -1,4 +1,25 @@
 import { Outlet } from 'react-router-dom';
+import { Games } from './Games';
+
+const Pages = {
+  Minecraft: [
+    {
+      name: 'Recipes',
+      link: '/recipes',
+    },
+    {
+      name: 'Textures',
+      link: '/textures',
+    },
+  ],
+  Learning: [
+    {
+      name: 'Japanese',
+      link: '/japanese',
+    },
+  ],
+  Games,
+};
 
 export default function Layout() {
   return (
@@ -36,19 +57,26 @@ export default function Layout() {
                 Pages
               </summary>
               <ul role='listbox'>
-                <li style={{ backgroundColor: 'var(--mark-color)' }}>
-                  Minecraft
-                </li>
-                <li>
-                  <a href='/recipes'>Recipes</a>
-                </li>
-                <li>
-                  <a href='/textures'>Textures</a>
-                </li>
-                <li style={{ backgroundColor: 'var(--mark-color)' }}>Other</li>
-                <li>
-                  <a href='/japanese'>Japanese</a>
-                </li>
+                {Object.entries(Pages).map(([key, value]) => (
+                  <>
+                    <li style={{ backgroundColor: 'var(--mark-color)' }}>
+                      {key}
+                    </li>
+                    {value.map(({ name, link }) => (
+                      <li>
+                        <a
+                          style={{
+                            whiteSpace: 'normal',
+                            width: '8rem',
+                          }}
+                          href={link}
+                        >
+                          {name}
+                        </a>
+                      </li>
+                    ))}
+                  </>
+                ))}
               </ul>
             </details>
           </li>

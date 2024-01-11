@@ -5,7 +5,7 @@ import Layout from './Layout';
 import { Home } from './Home';
 import { Textures } from './minecraft/Textures';
 import { Recipes } from './minecraft/Recipes';
-import { Japanese } from './other/Japanese';
+import { Japanese } from './learning/Japanese';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const queryClient = new QueryClient();
